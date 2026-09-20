@@ -62,6 +62,18 @@ noUiSlider.create(imageEffectSlider, {
   start: 1,
   step: 0.1,
   connect: 'lower',
+
+  format: {
+    to: (value) => {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+
+      return value.toFixed(1);
+    },
+
+    from: (value) => parseFloat(value),
+  },
 });
 
 imageEffectSlider.noUiSlider.on('update', () => {

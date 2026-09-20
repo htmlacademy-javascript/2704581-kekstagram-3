@@ -1,5 +1,4 @@
 import { openBigPicture } from './big-picture.js';
-import { similarPosts } from './posts.js';
 
 const prepareOnePost = (onePostData, template) => {
   const pictureTemplate = template.cloneNode(true);
@@ -32,22 +31,23 @@ function renderPosts(postsData) {
   document.querySelector('.pictures').appendChild(fragment);
 }
 
-const pictures = document.querySelector('.pictures');
+const initPostClickHandler = (posts) => {
+  const pictures = document.querySelector('.pictures');
 
-pictures.addEventListener('click', (evt) => {
-  if (evt.target.className !== 'picture__img') {
-    return;
-  }
+  pictures.addEventListener('click', (evt) => {
+    if (evt.target.className !== 'picture__img') {
+      return;
+    }
 
-  evt.preventDefault();
+    evt.preventDefault();
 
-  const id = evt.target.id;
+    const id = evt.target.id;
 
-  const currentPost = similarPosts.find(
-    (post) => post.id === Number(id)
-  );
+    const currentPost = posts.find((post) => post.id === Number(id));
 
-  openBigPicture(currentPost);
-});
+    openBigPicture(currentPost);
+  });
+};
 
-export { renderPosts };
+
+export { renderPosts, initPostClickHandler };
