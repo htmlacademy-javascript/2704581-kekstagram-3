@@ -7,18 +7,14 @@ const description = bigPicture.querySelector('.social__caption');
 const likes = bigPicture.querySelector('.likes-count');
 
 const commentCount = bigPicture.querySelector('.social__comment-count');
-const commentTotalCount = bigPicture.querySelector(
-  '.social__comment-total-count',
-);
-const commentTotalShownCount = bigPicture.querySelector(
-  '.social__comment-shown-count',
-);
+const commentTotalCount = bigPicture.querySelector('.social__comment-total-count');
+const commentTotalShownCount = bigPicture.querySelector('.social__comment-shown-count');
 const commentLoader = bigPicture.querySelector('.comments-loader');
 const commentsContainer = document.querySelector('.social__comments');
 
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-function renderComments(commentsData, container) {
+const renderComments = (commentsData, container) => {
   commentsData.forEach((oneComment) => {
     const comment = document.createElement('li');
     comment.classList.add('social__comment');
@@ -35,9 +31,9 @@ function renderComments(commentsData, container) {
     comment.append(avatar, message);
     container.appendChild(comment);
   });
-}
+};
 
-function makeShowNextComments(comments) {
+const makeShowNextComments = (comments) => {
   let visibleComments = COMMENTS_PER_PORTION;
   return (increment = 0) => {
     visibleComments += increment;
@@ -55,7 +51,7 @@ function makeShowNextComments(comments) {
       commentTotalShownCount.textContent = visibleComments;
     }
   };
-}
+};
 
 let controller;
 
@@ -65,7 +61,7 @@ const closeBigPicture = () => {
   controller.abort();
 };
 
-function openBigPicture(data) {
+const openBigPicture = (data) => {
   controller = new AbortController();
   const { signal } = controller;
 
@@ -101,6 +97,6 @@ function openBigPicture(data) {
   );
 
   closeButton.addEventListener('click', closeBigPicture, { signal });
-}
+};
 
 export { openBigPicture };

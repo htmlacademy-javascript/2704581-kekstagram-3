@@ -1,8 +1,8 @@
 const DEBOUNCE_DELAY = 500;
 
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+const getRandomInteger = (firstNumber, secondNumber) => {
+  const lower = Math.ceil(Math.min(firstNumber, secondNumber));
+  const upper = Math.floor(Math.max(firstNumber, secondNumber));
   const result = Math.random() * (upper - lower + 1) + lower;
 
   return Math.floor(result);
@@ -12,7 +12,7 @@ const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length 
 
 const checkStringLength = (string, number) => string.length <= number;
 
-function isPalindrome (string) {
+const isPalindrome = (string) => {
   const normalizedString = string.replaceAll(' ', '').toUpperCase();
   let newString = '';
 
@@ -21,9 +21,9 @@ function isPalindrome (string) {
   }
 
   return newString === normalizedString;
-}
+};
 
-function extractingInteger (parameter) {
+const extractInteger = (parameter) => {
   let positiveString = '';
   const normalizedParameter = parameter.toString();
 
@@ -40,15 +40,15 @@ function extractingInteger (parameter) {
   } else {
     return positiveInteger;
   }
-}
+};
 
-function getTimeInMinutes(timeString) {
+const getTimeInMinutes = (timeString) => {
   const [hours, minutes] = timeString.split(':').map(Number);
 
   return hours * 60 + minutes;
-}
+};
 
-function isMeetOutOfWorkHours(dayStart, dayEnd, meetStart, meetLength) {
+const isMeetOutOfWorkHours = (dayStart, dayEnd, meetStart, meetLength) => {
   const dayStartInMinutes = getTimeInMinutes(dayStart);
   const dayEndInMinutes = getTimeInMinutes(dayEnd);
   const meetStartInMinutes = getTimeInMinutes(meetStart);
@@ -58,9 +58,9 @@ function isMeetOutOfWorkHours(dayStart, dayEnd, meetStart, meetLength) {
     meetStartInMinutes >= dayStartInMinutes &&
     meetEndInMinutes <= dayEndInMinutes
   );
-}
+};
 
-function debounce(callback, timeoutDelay = DEBOUNCE_DELAY) {
+const debounce = (callback, timeoutDelay = DEBOUNCE_DELAY) => {
   let timeoutId;
 
   return (...rest) => {
@@ -71,6 +71,6 @@ function debounce(callback, timeoutDelay = DEBOUNCE_DELAY) {
       timeoutDelay
     );
   };
-}
+};
 
-export {getRandomArrayElement, getRandomInteger, checkStringLength, extractingInteger, isMeetOutOfWorkHours, isPalindrome, debounce};
+export { getRandomArrayElement, getRandomInteger, checkStringLength, extractInteger, isMeetOutOfWorkHours, isPalindrome, debounce };
