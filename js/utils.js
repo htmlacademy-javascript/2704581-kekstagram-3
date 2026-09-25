@@ -1,3 +1,5 @@
+const DEBOUNCE_DELAY = 500;
+
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -58,4 +60,17 @@ function isMeetOutOfWorkHours(dayStart, dayEnd, meetStart, meetLength) {
   );
 }
 
-export {getRandomArrayElement, getRandomInteger, checkStringLength, extractingInteger, isMeetOutOfWorkHours, isPalindrome};
+function debounce(callback, timeoutDelay = DEBOUNCE_DELAY) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(
+      () => callback.apply(this, rest),
+      timeoutDelay
+    );
+  };
+}
+
+export {getRandomArrayElement, getRandomInteger, checkStringLength, extractingInteger, isMeetOutOfWorkHours, isPalindrome, debounce};
