@@ -1,14 +1,14 @@
-import './utils.js';
-import {renderPosts} from './post-render.js';
 import './upload-image-modal.js';
-import {getData} from './api.js';
-import {showDataError} from './form-notification.js';
-import {showFilters, initFilters } from './image-filters.js';
+
+import { getData } from './api.js';
+import { renderPosts, initPostClickHandler } from './post-render.js';
+import { showDataError } from './form-notification.js';
+import { initFilters } from './image-filters.js';
 
 getData()
   .then((posts) => {
     renderPosts(posts);
-    showFilters();
+    initPostClickHandler(posts);
     initFilters(posts);
   })
   .catch(() => {

@@ -57,22 +57,30 @@ const MESSAGES = [
 
 const SIMILAR_POST_COUNT = 25;
 
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 30;
+const CommentRequirements = {
+  MIN_AMOUNT: 0,
+  MAX_AMOUNT: 30,
+};
 
-const MIN_AVATAR_POSITION = 1;
-const MAX_AVATAR_POSITION = 6;
+const LikeRequirements = {
+  MIN_AMOUNT: 15,
+  MAX_AMOUNT: 200,
+};
 
-const MIN_LIKES = 15;
-const MAX_LIKES = 200;
+const MessageRequirements = {
+  MIN_LENGTH: 1,
+  MAX_LENGTH: 2,
+};
 
-const MIN_MESSAGE_LENGTH = 1;
-const MAX_MESSAGE_LENGTH = 2;
+const AvatarRequirements = {
+  MIN_POSITION: 1,
+  MAX_POSITION: 6,
+};
 
 let currentCommentId = 1;
 
 const createMessage = () => {
-  const messageCount = getRandomInteger(MIN_MESSAGE_LENGTH, MAX_MESSAGE_LENGTH);
+  const messageCount = getRandomInteger(MessageRequirements.MIN_LENGTH, MessageRequirements.MAX_LENGTH);
   const firstMessage = getRandomArrayElement(MESSAGES);
 
   if (messageCount === 1) {
@@ -90,14 +98,14 @@ const createMessage = () => {
 
 const createComment = () => ({
   id: currentCommentId++,
-  avatar: `img/avatar-${getRandomInteger(MIN_AVATAR_POSITION, MAX_AVATAR_POSITION)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(AvatarRequirements.MIN_POSITION, AvatarRequirements.MAX_POSITION)}.svg`,
   name: getRandomArrayElement(NAMES),
   message: createMessage(),
 });
 
 const generateComments = () => {
   const comments = [];
-  const commentCount = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
+  const commentCount = getRandomInteger(CommentRequirements.MIN_AMOUNT, CommentRequirements.MAX_AMOUNT);
 
   for (let i = 0; i < commentCount; i++) {
     comments.push(createComment());
@@ -113,11 +121,11 @@ const createPost = (_, index) => {
     id: postId,
     url: `photos/${postId}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
-    likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
+    likes: getRandomInteger(LikeRequirements.MIN_AMOUNT, LikeRequirements.MAX_AMOUNT),
     comments: generateComments()
   };
 };
 
 const similarPosts = Array.from({length: SIMILAR_POST_COUNT}, createPost);
 
-export {similarPosts};
+export { similarPosts };

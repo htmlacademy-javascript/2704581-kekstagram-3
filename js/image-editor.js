@@ -1,16 +1,16 @@
-const RANGE_SCALE_MIN = 25;
-const RANGE_SCALE_MAX = 100;
-const RANGE_SCALE_STEP = 25;
-const RANGE_SCALE_START = 100;
+const ScaleRequirements = {
+  MIN: 25,
+  MAX: 100,
+  STEP: 25,
+  START: 100,
+};
 
 const scaleControls = document.querySelector('.scale');
 const scaleControlValue = document.querySelector('.scale__control--value');
 const imageUploadPreview = document.querySelector('.img-upload__preview img');
 
 const effectLevelValue = document.querySelector('.effect-level__value');
-const imageEffectSliderContainer = document.querySelector(
-  '.img-upload__effect-level',
-);
+const imageEffectSliderContainer = document.querySelector('.img-upload__effect-level');
 const imageEffectSlider = document.querySelector('.effect-level__slider');
 const effectsList = document.querySelector('.effects__list');
 
@@ -29,25 +29,25 @@ const initializeImageFormScale = ({ signal }) => {
     (evt) => {
       const currentScale = parseInt(scaleControlValue.value, 10);
       if (evt.target.classList.contains('scale__control--smaller')) {
-        if (currentScale <= RANGE_SCALE_MIN) {
+        if (currentScale <= ScaleRequirements.MIN) {
           return;
         }
 
-        updateScale(currentScale - RANGE_SCALE_STEP);
+        updateScale(currentScale - ScaleRequirements.STEP);
       }
 
       if (evt.target.classList.contains('scale__control--bigger')) {
-        if (currentScale >= RANGE_SCALE_MAX) {
+        if (currentScale >= ScaleRequirements.MAX) {
           return;
         }
 
-        updateScale(currentScale + RANGE_SCALE_STEP);
+        updateScale(currentScale + ScaleRequirements.STEP);
       }
     },
     { signal },
   );
 
-  updateScale(RANGE_SCALE_START);
+  updateScale(ScaleRequirements.START);
 };
 
 const setEffectLevelValue = (value = 0) => {
@@ -62,6 +62,18 @@ noUiSlider.create(imageEffectSlider, {
   start: 1,
   step: 0.1,
   connect: 'lower',
+
+  format: {
+    to: (value) => {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+
+      return value.toFixed(1);
+    },
+
+    from: (value) => parseFloat(value),
+  },
 });
 
 imageEffectSlider.noUiSlider.on('update', () => {
@@ -176,7 +188,7 @@ const initializeImageEditorForm = ({ signal }) => {
 };
 
 const resetImageEditor = () => {
-  updateScale(RANGE_SCALE_START);
+  updateScale(ScaleRequirements.START);
   setImageUploadPreviewStyle();
   setEffectLevelValue();
   document.querySelector('.effects__radio[value="none"]').checked = true;

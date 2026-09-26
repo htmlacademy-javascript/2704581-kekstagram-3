@@ -1,13 +1,14 @@
 import { openBigPicture } from './big-picture.js';
-import { similarPosts } from './posts.js';
 
-const prepareOnePost = (onePostData, template) => {
-  const pictureTemplate = template.cloneNode(true);
+const picturesContainer = document.querySelector('.pictures');
+const pictureTemplate = document.querySelector('#picture').content;
 
-  const pictureItem = pictureTemplate.querySelector('.picture');
-  const image = pictureItem.querySelector('.picture__img');
-  const likes = pictureTemplate.querySelector('.picture__likes');
-  const comments = pictureTemplate.querySelector('.picture__comments');
+const prepareOnePost = (onePostData) => {
+  const picture = pictureTemplate.cloneNode(true);
+
+  const image = picture.querySelector('.picture__img');
+  const likes = picture.querySelector('.picture__likes');
+  const comments = picture.querySelector('.picture__comments');
 
   image.id = onePostData.id;
   image.src = onePostData.url;
@@ -16,38 +17,33 @@ const prepareOnePost = (onePostData, template) => {
   likes.textContent = onePostData.likes;
   comments.textContent = onePostData.comments.length;
 
-  return pictureTemplate;
+  return picture;
 };
 
-function renderPosts(postsData) {
+const renderPosts = (postsData) => {
   const fragment = document.createDocumentFragment();
-  const pictureTemplate = document.querySelector('#picture').content;
 
   postsData.forEach((post) => {
-    const onePostData = prepareOnePost(post, pictureTemplate);
-
-    fragment.appendChild(onePostData);
+    const picture = prepareOnePost(post);
+    fragment.appendChild(picture);
   });
 
-  document.querySelector('.pictures').appendChild(fragment);
-}
+  picturesContainer.appendChild(fragment);
+};
 
-const pictures = document.querySelector('.pictures');
+const initPostClickHandler = (posts) => {
+  picturesContainer.addEventListener('click', (evt) => {
+    if (evt.target.className !== 'picture__img') {
+      return;
+    }
 
-pictures.addEventListener('click', (evt) => {
-  if (evt.target.className !== 'picture__img') {
-    return;
-  }
+    evt.preventDefault();
 
-  evt.preventDefault();
+    const id = evt.target.id;
+    const currentPost = posts.find((post) => post.id === Number(id));
 
-  const id = evt.target.id;
+    openBigPicture(currentPost);
+  });
+};
 
-  const currentPost = similarPosts.find(
-    (post) => post.id === Number(id)
-  );
-
-  openBigPicture(currentPost);
-});
-
-export { renderPosts };
+export { renderPosts, initPostClickHandler };
