@@ -21,7 +21,7 @@ const pristine = new Pristine(imageUploadForm, {
   successClass: 'form__item--valid',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
-  errorTextClass: 'form__error',
+  errorTextClass: 'img-upload__field-wrapper--error',
 });
 
 const validateComment = (value) => value.length <= COMMENT_MAX_LENGTH;
@@ -53,9 +53,9 @@ const validateHashtagsFormat = (value) => {
 };
 
 const validateHashtagsCount = (value) => {
-  const { uniqueHashtags } = getHashtags(value);
+  const { hashtags } = getHashtags(value);
 
-  return uniqueHashtags.size <= HashtagRequirements.MAX_COUNT;
+  return hashtags.length <= HashtagRequirements.MAX_COUNT;
 };
 
 const validateHashtagsDoubleness = (value) => {

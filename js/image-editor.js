@@ -15,14 +15,17 @@ const imageEffectSliderContainer = document.querySelector(
 );
 const imageEffectSlider = document.querySelector('.effect-level__slider');
 const effectsList = document.querySelector('.effects__list');
+const defaultEffect = document.querySelector('.effects__radio[value="none"]');
 
 const setImageUploadPreviewStyle = (style = '', property = 'filter') => {
   imageUploadPreview.style[property] = style;
 };
 
+let currentEffect = 'none';
+
 const updateScale = (scale) => {
   scaleControlValue.value = `${scale}%`;
-  imageUploadPreview.style.transform = `scale(${scale / 100})`;
+  imageUploadPreview.style.transform = `scale(${scale / ScaleRequirements.MAX})`;
 };
 
 const initializeImageFormScale = ({ signal }) => {
@@ -30,6 +33,7 @@ const initializeImageFormScale = ({ signal }) => {
     'click',
     (evt) => {
       const currentScale = parseInt(scaleControlValue.value, 10);
+
       if (evt.target.classList.contains('scale__control--smaller')) {
         if (currentScale <= ScaleRequirements.MIN) {
           return;
@@ -56,13 +60,14 @@ const setEffectLevelValue = (value = 0) => {
   effectLevelValue.value = value;
 };
 
+const getEffectOptions = ({ min = 0, max = 1, start = 1, step = 0.1 } = {}) => ({
+  range: { min, max },
+  start,
+  step
+});
+
 noUiSlider.create(imageEffectSlider, {
-  range: {
-    min: 0,
-    max: 1,
-  },
-  start: 1,
-  step: 0.1,
+  ...getEffectOptions(),
   connect: 'lower',
 
   format: {
@@ -80,7 +85,6 @@ noUiSlider.create(imageEffectSlider, {
 
 imageEffectSlider.noUiSlider.on('update', () => {
   const value = imageEffectSlider.noUiSlider.get();
-  const currentEffect = document.querySelector('.effects__radio:checked').value;
 
   setEffectLevelValue(value);
 
@@ -118,59 +122,31 @@ const initializeImageFormEffects = ({ signal }) => {
   effectsList.addEventListener(
     'change',
     (evt) => {
-      const effect = evt.target.value;
+      currentEffect = evt.target.value;
 
-      toggleImageEffectSliderContainer(effect !== 'none');
+      toggleImageEffectSliderContainer(currentEffect !== 'none');
 
-      switch (effect) {
+      switch (currentEffect) {
         case 'chrome':
         case 'sepia':
-          imageEffectSlider.noUiSlider.updateOptions({
-            range: {
-              min: 0,
-              max: 1,
-            },
-            start: 1,
-            step: 0.1,
-          });
+          imageEffectSlider.noUiSlider.updateOptions(getEffectOptions());
           break;
 
         case 'marvin':
-          imageEffectSlider.noUiSlider.updateOptions({
-            range: {
-              min: 0,
-              max: 100,
-            },
-            start: 100,
-            step: 1,
-          });
+          imageEffectSlider.noUiSlider.updateOptions(getEffectOptions({ max: 100, start: 100, step: 1 }));
           break;
 
         case 'phobos':
-          imageEffectSlider.noUiSlider.updateOptions({
-            range: {
-              min: 0,
-              max: 3,
-            },
-            start: 3,
-            step: 0.1,
-          });
+          imageEffectSlider.noUiSlider.updateOptions(getEffectOptions({ max: 3, start: 3 }));
           break;
 
         case 'heat':
-          imageEffectSlider.noUiSlider.updateOptions({
-            range: {
-              min: 1,
-              max: 3,
-            },
-            start: 3,
-            step: 0.1,
-          });
+          imageEffectSlider.noUiSlider.updateOptions(getEffectOptions({ min: 1, max: 3, start: 3 }));
           break;
 
         default:
-          imageUploadPreview.style.filter = '';
-          effectLevelValue.value = 0;
+          setImageUploadPreviewStyle();
+          setEffectLevelValue();
       }
     },
     { signal },
@@ -178,18 +154,24 @@ const initializeImageFormEffects = ({ signal }) => {
 };
 
 const initializeImageEditorForm = ({ signal }) => {
+  currentEffect = 'none';
+
   toggleImageEffectSliderContainer();
   setImageUploadPreviewStyle();
   setEffectLevelValue();
+
   initializeImageFormScale({ signal });
   initializeImageFormEffects({ signal });
 };
 
 const resetImageEditorForm = () => {
+  currentEffect = 'none';
+
   updateScale(ScaleRequirements.START);
   setImageUploadPreviewStyle();
   setEffectLevelValue();
-  document.querySelector('.effects__radio[value="none"]').checked = true;
+
+  defaultEffect.checked = true;
   toggleImageEffectSliderContainer();
 };
 

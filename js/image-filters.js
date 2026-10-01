@@ -18,16 +18,21 @@ const debouncedRender = debounce((filteredPosts) => {
 });
 
 const initFilters = (posts) => {
+  let activeButton = filtersForm.querySelector('.img-filters__button--active');
+
   filtersForm.addEventListener('click', (evt) => {
     if (!evt.target.classList.contains('img-filters__button')) {
       return;
     }
 
-    const activeButton = filtersForm.querySelector(
-      '.img-filters__button--active',
-    );
+    if (evt.target === activeButton) {
+      return;
+    }
+
     activeButton.classList.remove('img-filters__button--active');
     evt.target.classList.add('img-filters__button--active');
+
+    activeButton = evt.target;
 
     const filterId = evt.target.id;
     let filteredPosts;
